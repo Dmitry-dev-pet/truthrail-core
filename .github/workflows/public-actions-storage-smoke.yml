@@ -1,0 +1,24 @@
+name: Public Actions storage smoke
+on:
+  push:
+    paths:
+      - .github/workflows/public-actions-storage-smoke.yml
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Generate harmless public test
+        run: |
+          mkdir -p smoke
+          printf 'Public storage smoke\n' > smoke/result.txt
+      - name: Upload ephemeral test artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: public-storage-smoke
+          path: smoke/result.txt
+          retention-days: 1
+          if-no-files-found: error
