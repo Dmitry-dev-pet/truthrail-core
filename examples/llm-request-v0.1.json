@@ -1,0 +1,26 @@
+{
+  "schema": "truthrail.llm.request.v1",
+  "request_id": "demo-review-001",
+  "operation": "second_opinion",
+  "selection": {
+    "model": {
+      "publisher": "google",
+      "id": "example-gemini-model"
+    },
+    "access": {
+      "provider": "google",
+      "provider_kind": "subscription_adapter",
+      "route_id": "reviewed-gemini-worker",
+      "transport": "reviewed_worker"
+    },
+    "fallback_policy": "deny"
+  },
+  "input_policy": {
+    "classification": "private",
+    "mode": "evidence-only",
+    "tool_profile": "none",
+    "source_refs": [
+      "sha256:example-redacted-evidence"
+    ]
+  }
+}
