@@ -1,0 +1,269 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://truthrail.dev/schemas/llm-routing-v1.schema.json",
+  "title": "Truthrail LLM route request / receipt v1",
+  "description": "Declarative selection and evidence, never executable authority or credential material",
+  "oneOf": [
+    {
+      "$ref": "#/$defs/request"
+    },
+    {
+      "$ref": "#/$defs/receipt"
+    }
+  ],
+  "$defs": {
+    "selection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "model",
+        "access",
+        "fallback_policy"
+      ],
+      "properties": {
+        "model": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "publisher",
+            "id"
+          ],
+          "properties": {
+            "publisher": {
+              "type": "string",
+              "minLength": 1
+            },
+            "id": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "access": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "provider",
+            "provider_kind",
+            "route_id",
+            "transport"
+          ],
+          "properties": {
+            "provider": {
+              "type": "string",
+              "minLength": 1
+            },
+            "provider_kind": {
+              "type": "string",
+              "enum": [
+                "direct",
+                "reseller",
+                "subscription_adapter"
+              ]
+            },
+            "route_id": {
+              "type": "string",
+              "minLength": 1
+            },
+            "transport": {
+              "type": "string",
+              "enum": [
+                "gateway",
+                "reviewed_worker"
+              ]
+            }
+          }
+        },
+        "fallback_policy": {
+          "type": "string",
+          "enum": [
+            "deny",
+            "approval_required"
+          ]
+        }
+      }
+    },
+    "input_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "classification",
+        "mode",
+        "tool_profile"
+      ],
+      "properties": {
+        "classification": {
+          "type": "string",
+          "enum": [
+            "public",
+            "private",
+            "restricted"
+          ]
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "evidence-only",
+            "github-read"
+          ]
+        },
+        "tool_profile": {
+          "type": "string",
+          "enum": [
+            "none",
+            "workspace_read_only"
+          ]
+        },
+        "source_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "approval_ref": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "request": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "request_id",
+        "operation",
+        "selection",
+        "input_policy"
+      ],
+      "properties": {
+        "schema": {
+          "const": "truthrail.llm.request.v1"
+        },
+        "request_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "operation": {
+          "type": "string",
+          "enum": [
+            "inference",
+            "second_opinion",
+            "review",
+            "critique",
+            "research"
+          ]
+        },
+        "selection": {
+          "$ref": "#/$defs/selection"
+        },
+        "input_policy": {
+          "$ref": "#/$defs/input_policy"
+        },
+        "budget": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "currency",
+            "max_amount"
+          ],
+          "properties": {
+            "currency": {
+              "const": "USD"
+            },
+            "max_amount": {
+              "type": "number",
+              "minimum": 0
+            }
+          }
+        }
+      }
+    },
+    "receipt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "request_id",
+        "status",
+        "verification"
+      ],
+      "properties": {
+        "schema": {
+          "const": "truthrail.llm.receipt.v1"
+        },
+        "request_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "blocked",
+            "failed",
+            "executed"
+          ]
+        },
+        "actual_selection": {
+          "$ref": "#/$defs/selection"
+        },
+        "verification": {
+          "$ref": "#/$defs/verification"
+        },
+        "usage": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "input_tokens": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "output_tokens": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "charged_amount_usd": {
+              "type": "number",
+              "minimum": 0
+            }
+          }
+        },
+        "failure_reason": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "verification": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "state",
+        "evidence_refs"
+      ],
+      "properties": {
+        "state": {
+          "type": "string",
+          "enum": [
+            "unverified",
+            "verified"
+          ]
+        },
+        "evidence_refs": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uniqueItems": true
+        },
+        "checked_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    }
+  }
+}
