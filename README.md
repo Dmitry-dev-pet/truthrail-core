@@ -2,6 +2,10 @@
 
 **English** | [Русский](README.ru.md)
 
+**Sharing this repository with an AI assistant?** Have it read [AI_START_HERE.md](AI_START_HERE.md) first. That guide routes requests to explanation, read-only exploration, optional setup, or authorized actions. Sharing a URL does not install skills or grant write access.
+
+Suggested first message: “Read `AI_START_HERE.md` in this repository and explain how Truthrail could work with my projects. Read-only; do not create or change anything.”
+
 **One source of truth. Any AI.**
 
 Truthrail lets you keep using ChatGPT as the interface while the durable state of your
