@@ -4,6 +4,10 @@
 
 This repository is the portable, user-agnostic Truthrail Core reference implementation.
 
+## Reader versus contributor
+
+If a user shared this repository with an AI assistant to understand or adopt Truthrail, the entry point is [AI_START_HERE.md](AI_START_HERE.md). The contribution rules below apply when **modifying Truthrail Core**, not when exploring the user's separate projects. Merely reading this repository does not authorize changes or privileged access.
+
 ## Change rules
 
 1. Create a feature branch from current `main`.
