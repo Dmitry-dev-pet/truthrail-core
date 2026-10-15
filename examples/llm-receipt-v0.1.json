@@ -1,0 +1,28 @@
+{
+  "schema": "truthrail.llm.receipt.v1",
+  "request_id": "demo-review-001",
+  "status": "executed",
+  "actual_selection": {
+    "model": {
+      "publisher": "google",
+      "id": "example-gemini-model"
+    },
+    "access": {
+      "provider": "google",
+      "provider_kind": "subscription_adapter",
+      "route_id": "reviewed-gemini-worker",
+      "transport": "reviewed_worker"
+    },
+    "fallback_policy": "deny"
+  },
+  "verification": {
+    "state": "verified",
+    "evidence_refs": [
+      "reviewed-workflow-run://example/123"
+    ]
+  },
+  "usage": {
+    "input_tokens": 100,
+    "output_tokens": 50
+  }
+}
