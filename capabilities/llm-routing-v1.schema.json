@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://truthrail.dev/schemas/llm-routing-v1.schema.json",
+  "$id": "urn:truthrail:llm-routing:v1",
   "title": "Truthrail LLM route request / receipt v1",
   "description": "Declarative selection and evidence, never executable authority or credential material",
   "oneOf": [
