@@ -17,6 +17,8 @@ If a person gave you a link to this repository, start here. This is a **navigati
 
 If the person supplied **only this Core URL**, do not assume access to their repositories or that they want installation. Explain Core and offer a read-only exploration of a repository they choose.
 
+**Write boundary:** Every repository mutation requires the person's explicit approval for that target and operation. Connected GitHub tools or an existing token are not approval by themselves.
+
 ## Reading and access rules
 
 1. Begin with the smallest useful set of documents in the table above. Do not treat every file as something to execute.
