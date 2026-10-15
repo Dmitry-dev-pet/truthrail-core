@@ -7,12 +7,12 @@ from pathlib import Path
 
 import yaml
 
-from agent_hub_core.admission import (
+from truthrail_core.admission import (
     POLICY_ID,
     evaluate_operation_admission,
     format_operation_admission_markdown,
 )
-from agent_hub_core.cli import main
+from truthrail_core.cli import main
 
 
 ROOT = Path(__file__).resolve().parents[1]

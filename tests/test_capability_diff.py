@@ -5,8 +5,8 @@ import unittest
 from contextlib import redirect_stdout
 from pathlib import Path
 
-from agent_hub_core.cli import main
-from agent_hub_core.capability_diff import (
+from truthrail_core.cli import main
+from truthrail_core.capability_diff import (
     diff_control_planes,
     format_capability_diff_markdown,
 )

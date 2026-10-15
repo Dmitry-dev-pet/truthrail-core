@@ -3,9 +3,8 @@ requires = ["setuptools>=75", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-# Distribution name stays stable during the compatibility window.
-name = "agent-hub-core"
-version = "0.4.1"
+name = "truthrail-core"
+version = "0.5.0"
 description = "Truthrail: portable GitHub-native protocol and reference implementation for AI work continuity and routing."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -31,11 +30,10 @@ dev = [
 
 [project.scripts]
 truthrail = "truthrail_core.cli:main"
-agent-hub-core = "agent_hub_core.cli:main"
 
 [tool.setuptools.packages.find]
-include = ["agent_hub_core*", "truthrail_core*"]
+include = ["truthrail_core*"]
 
 [tool.setuptools.package-data]
-"agent_hub_core.schemas.v0_1" = ["*.json"]
-"agent_hub_core.schemas.v0_2" = ["*.json"]
+"truthrail_core.schemas.v0_1" = ["*.json"]
+"truthrail_core.schemas.v0_2" = ["*.json"]

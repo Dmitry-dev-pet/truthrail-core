@@ -1,5 +1,5 @@
 version: 1
-name: agent-hub-onboarding
+name: truthrail-onboarding
 default_mode: brownfield
 
 access_stages:

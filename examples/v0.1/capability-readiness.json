@@ -26,11 +26,11 @@
   "authoritative_refs": [
     {
       "type": "repository",
-      "value": "example-org/agent-hub"
+      "value": "example-org/truthrail"
     },
     {
       "type": "workflow_run",
-      "value": "example-org/agent-hub/actions/runs/123"
+      "value": "example-org/truthrail/actions/runs/123"
     }
   ]
 }

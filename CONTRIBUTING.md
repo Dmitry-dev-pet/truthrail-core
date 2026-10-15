@@ -7,8 +7,8 @@ Contributions are welcome.
 ```bash
 python -m pip install -e ".[dev]"
 python -m unittest discover -s tests -v
-agent-hub-core check-schemas
-agent-hub-core conformance
+truthrail check-schemas
+truthrail conformance
 python scripts/audit_public_tree.py
 python -m build
 ```

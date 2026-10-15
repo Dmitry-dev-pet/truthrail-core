@@ -7,14 +7,14 @@ from pathlib import Path
 
 import yaml
 
-from agent_hub_core.capability_diff import diff_control_planes
-from agent_hub_core.capability_policy import (
+from truthrail_core.capability_diff import diff_control_planes
+from truthrail_core.capability_policy import (
     POLICY_ID,
     evaluate_capability_policy,
     evaluate_control_plane_policy,
     format_capability_policy_markdown,
 )
-from agent_hub_core.cli import main
+from truthrail_core.cli import main
 
 
 ROOT = Path(__file__).resolve().parents[1]

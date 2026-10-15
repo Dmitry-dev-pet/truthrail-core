@@ -2,7 +2,7 @@
 
 Truthrail Core separates **authentication for a capability** from the core protocol.
 
-A fresh instance can start without any user-managed secret. The legacy `agent-hub-core` CLI remains an alias for v0.1 compatibility. Public GitHub reads use
+A fresh instance can start without any user-managed secret. Public GitHub reads use
 unauthenticated API access, direct connected operations may use ambient host
 authentication when available, and GitHub Actions can use GitHub's provider-managed
 `GITHUB_TOKEN`.

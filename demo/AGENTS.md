@@ -25,13 +25,13 @@ For a demo record request:
 4. Create exactly one public issue with this title:
 
    ```text
-   [agent-hub-demo] <client>
+   [truthrail-demo] <client>
    ```
 
 5. Use exactly this three-line body:
 
    ```text
-   agent-hub-demo
+   truthrail-demo
    client: <client>
    policy: demo/control-plane.json
    ```

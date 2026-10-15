@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:agent-hub-core:v0.2:verification-result",
+  "$id": "urn:truthrail-core:v0.2:verification-result",
   "title": "Truthrail VerificationResult v0.2",
   "type": "object",
   "additionalProperties": false,

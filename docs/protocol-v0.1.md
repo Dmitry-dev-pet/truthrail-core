@@ -1,6 +1,6 @@
 # Truthrail Core protocol v0.1
 
-> Compatibility note: v0.1 schema IDs and package identifiers retain the historical `agent-hub-core` namespace.
+> v0.1 JSON Schema IDs use the `truthrail-core` namespace. Version 0.5.0 retires previous package and identifier aliases.
 
 ## 1. Source precedence
 
@@ -215,7 +215,7 @@ correctness model.
 
 ## 9. Reference conformance
 
-`agent-hub-core conformance` runs a deterministic end-to-end scenario over five
+`truthrail-core conformance` runs a deterministic end-to-end scenario over five
 example repositories. It covers fresh resolution, hydration, L0-L5 level selection,
 live control-plane routing, operator-only rejection, handoff, execution receipts,
 verification, and fresh-session recovery.
@@ -224,7 +224,7 @@ verification, and fresh-session recovery.
 ## 10. Onboarding receipt
 
 Onboarding is a distinct lifecycle that converts existing GitHub state into a
-portable Agent Hub instance:
+portable Truthrail instance:
 
 ```text
 discover -> classify -> build -> validate -> watch -> receipt

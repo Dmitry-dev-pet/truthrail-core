@@ -5,6 +5,9 @@ description: Select the narrowest safe capability and execution level, including
 
 # Route capabilities safely
 
+This skill selects a route; it never grants permission to invoke it. Check
+current provider permissions and explicit user authorization before any write.
+
 Choose the lowest sufficient level:
 
 - L0 live read/reason;

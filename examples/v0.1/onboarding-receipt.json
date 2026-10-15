@@ -27,15 +27,15 @@
   "authoritative_refs": [
     {
       "type": "repository",
-      "value": "example-org/agent-hub"
+      "value": "example-org/truthrail"
     },
     {
       "type": "file",
-      "value": ".agent-hub/agent-hub.yaml"
+      "value": ".truthrail/truthrail.yaml"
     },
     {
       "type": "file",
-      "value": ".agent-hub/projects.yaml"
+      "value": ".truthrail/projects.yaml"
     }
   ]
 }

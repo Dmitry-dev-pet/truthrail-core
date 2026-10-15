@@ -5,7 +5,7 @@ from copy import deepcopy
 from collections.abc import Mapping, Sequence
 from typing import Any
 
-from agent_hub_core.validation import _canonical_digest as canonical_digest
+from .validation import _canonical_digest as canonical_digest
 from .validation import ProtocolValidationError, validate_document, validate_run_bundle
 
 

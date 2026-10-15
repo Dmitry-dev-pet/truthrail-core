@@ -1,6 +1,6 @@
 import unittest
 
-from agent_hub_core.validation import (
+from truthrail_core.validation import (
     ProtocolValidationError,
     validate_document,
     validate_run_bundle,

@@ -7,6 +7,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 TEXT_SUFFIXES = {".py", ".md", ".toml", ".json", ".yaml", ".yml"}
+RETIRED_NAME_RE = re.compile(r"agent[-_ ]hub", re.IGNORECASE)
 TOKEN_RE = re.compile(r"[A-Za-z0-9_.@+-]+")
 
 # SHA-256 fingerprints of known instance-specific identifiers. Keeping only
@@ -57,6 +58,8 @@ def audit(root: Path = ROOT) -> list[str]:
             continue
 
         relative = path.relative_to(root)
+        if RETIRED_NAME_RE.search(str(relative)):
+            errors.append(f"retired naming in path: {relative}")
         if path.name in FORBIDDEN_FILENAMES:
             errors.append(f"forbidden credential-like file: {relative}")
 
@@ -64,6 +67,8 @@ def audit(root: Path = ROOT) -> list[str]:
             continue
 
         text = path.read_text(encoding="utf-8", errors="replace")
+        if RETIRED_NAME_RE.search(text):
+            errors.append(f"{relative} contains retired product naming")
         if any(
             fingerprint(token) in FORBIDDEN_TOKEN_HASHES
             for token in TOKEN_RE.findall(text)

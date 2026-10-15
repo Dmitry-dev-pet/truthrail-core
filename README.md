@@ -189,7 +189,7 @@ The assistant profile owns behavior and skill IDs. The private instance owns use
 durable state. Core owns portable protocol/skills/routing mechanism. Concrete capabilities
 own their live operation contracts. See [Truthrail boundaries v0.3](docs/boundaries-v0.3.md).
 
-## Python API and compatibility
+## Python API
 
 New Python code should import `truthrail_core`:
 
@@ -205,9 +205,8 @@ digest. See [execution binding and migration](docs/execution-binding-v0.2.md).
 These checks validate supplied records. The owning capability still authenticates
 approvals, reads the live provider, enforces permissions and handles retry safety.
 
-The legacy `agent_hub_core` namespace and `agent-hub-core` CLI remain supported during
-the compatibility window and point to the same implementation. The preferred CLI is
-`truthrail`.
+The supported Python import is `truthrail_core` and the supported CLI is `truthrail`.
+Earlier release identifiers require migration when updating to 0.5.0.
 
 ## What Truthrail stores
 
@@ -247,12 +246,10 @@ Truthrail is not:
 - [Run ledger v0.2](docs/run-ledger-v0.2.md)
 - [Truthrail Watch semantics v0.2](docs/watch-v0.2.md)
 - [Named assistant skills v0.2](docs/assistant-skills-v0.2.md)
+- [Portable skills audit v0.5](docs/skill-audit-v0.5.md)
 - [Security](SECURITY.md)
 - [Bootstrap skill](skills/bootstrap-instance/SKILL.md)
 
-> Formerly **Agent Hub Core**. Legacy identifiers such as `agent-hub-core`,
-> `agent_hub_core`, and `.agent-hub/` remain supported for compatibility; new code and
-> documentation should use Truthrail names.
 
 ## License
 

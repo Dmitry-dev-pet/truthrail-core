@@ -33,7 +33,7 @@ class CrossVendorDemoTests(unittest.TestCase):
         self.assertIn("Client: chatgpt.", readme)
         self.assertIn("Client: grok.", readme)
         self.assertIn("The operation and policy are identical", readme)
-        self.assertIn("[agent-hub-demo] <client>", readme)
+        self.assertIn("[truthrail-demo] <client>", readme)
 
 
 if __name__ == "__main__":

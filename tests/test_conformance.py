@@ -1,6 +1,6 @@
 import unittest
 
-from agent_hub_core.conformance import run_scenario
+from truthrail_core.conformance import run_scenario
 
 
 class ConformanceTests(unittest.TestCase):

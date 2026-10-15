@@ -55,7 +55,7 @@ AI chat
   -> normal GitHub connection
   -> reads demo/AGENTS.md
   -> reads demo/control-plane.json
-  -> creates [agent-hub-demo] <client> issue (legacy v0.1 trigger name)
+  -> creates [truthrail-demo] <client> issue (current public demo trigger)
   -> re-reads that issue
   -> verifies title + body
 ```
@@ -63,7 +63,7 @@ AI chat
 The required issue body is:
 
 ```text
-agent-hub-demo
+truthrail-demo
 client: <client>
 policy: demo/control-plane.json
 ```

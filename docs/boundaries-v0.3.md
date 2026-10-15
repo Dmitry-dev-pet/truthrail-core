@@ -41,7 +41,7 @@ A private instance owns user-specific durable state and routing overlays:
 - capability references and credential metadata;
 - run-ledger state and references to authoritative systems.
 
-An instance may keep thin compatibility shims needed by an older consumer, but it must
+An instance may keep host-specific adapters needed by a consumer, but it must
 not maintain an independent copy of the Truthrail protocol implementation or portable
 schemas. Freshness-sensitive state remains authoritative in the live target system.
 
@@ -56,11 +56,9 @@ Core owns portable mechanism:
 - capability routing/admission/policy helpers;
 - compatibility adapters.
 
-The canonical Python namespace is `truthrail_core`. The legacy
-`agent_hub_core` namespace remains supported during the compatibility window.
+The Python implementation and import namespace is `truthrail_core`. The supported
+command-line interface is `truthrail`. Keep one canonical implementation.
 
-The canonical CLI is `truthrail`. The legacy `agent-hub-core` command remains an
-alias.
 
 ## 4. Capabilities and control planes
 
@@ -71,21 +69,12 @@ verification evidence.
 Core routes to capabilities; it does not copy their operation lists. Assistant profiles
 do not hard-code their workflow paths or triggers.
 
-## Compatibility quarantine
+## Canonical implementation
 
-Legacy Agent Hub identifiers are allowed only where removing them would break an
-existing consumer. New code and documentation use Truthrail names.
-
-| Concern | Canonical | Compatibility |
-| --- | --- | --- |
-| product | Truthrail | Agent Hub |
-| CLI | `truthrail` | `agent-hub-core` |
-| Python import | `truthrail_core` | `agent_hub_core` |
-| private instance | `truthrail` | `agent-hub` aliases where required |
-| portable skills | skill IDs | physical legacy plugin paths only in adapters |
-
-Compatibility code should point inward to the canonical implementation. Do not create a
-second implementation under a legacy name.
+The public Core contains one Python package and one set of versioned schemas.
+Private instances retain user-specific state and adapters; they do not fork Core.
+The old technical aliases were retired in the 0.5.0 migration. Projects pinned
+to earlier versions must update imports and configuration deliberately.
 
 ## Lifecycle invariant
 

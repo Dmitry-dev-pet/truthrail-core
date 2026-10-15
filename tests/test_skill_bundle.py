@@ -1,3 +1,4 @@
+import re
 import unittest
 from pathlib import Path
 
@@ -5,41 +6,58 @@ import yaml
 
 
 ROOT = Path(__file__).resolve().parents[1]
+SKILLS = ROOT / "skills"
 
 
 class SkillBundleTests(unittest.TestCase):
-    def test_declared_skills_resolve_to_matching_contracts(self):
-        bundle = yaml.safe_load(
-            (ROOT / "skills" / "default-assistant.yaml").read_text(encoding="utf-8")
-        )
-
+    def test_all_skills_are_declared_exactly_once(self):
+        bundle = yaml.safe_load((SKILLS / "default-assistant.yaml").read_text(encoding="utf-8"))
+        self.assertEqual(bundle["id"], "truthrail-default-assistant")
+        self.assertEqual(bundle["source"]["protocol"], "0.2")
         groups = ("default_skills", "setup_skills", "optional_skills")
-        skill_ids = [
-            skill_id
-            for group in groups
-            for skill_id in bundle.get(group, [])
-        ]
-
+        skill_ids = [skill_id for group in groups for skill_id in bundle.get(group, [])]
+        self.assertEqual(len(skill_ids), 9)
         self.assertEqual(len(skill_ids), len(set(skill_ids)))
+        declared = set(skill_ids)
+        present = {path.parent.name for path in SKILLS.glob("*/SKILL.md")}
+        self.assertEqual(present, declared, "missing or unregistered skill contract")
 
-        for skill_id in skill_ids:
+        for skill_id in sorted(declared):
             with self.subTest(skill=skill_id):
-                path = ROOT / "skills" / skill_id / "SKILL.md"
-                self.assertTrue(path.is_file(), f"missing contract for {skill_id}")
-
-                text = path.read_text(encoding="utf-8")
-                self.assertTrue(text.startswith("---\n"))
-                parts = text.split("---", 2)
-                self.assertGreaterEqual(len(parts), 3)
+                path = SKILLS / skill_id / "SKILL.md"
+                content = path.read_text(encoding="utf-8")
+                self.assertTrue(content.startswith("---\n"))
+                parts = content.split("---", 2)
+                self.assertEqual(len(parts), 3)
                 metadata = yaml.safe_load(parts[1])
+                self.assertIsInstance(metadata, dict)
                 self.assertEqual(metadata["name"], skill_id)
+                self.assertTrue(metadata.get("description", "").strip())
+                self.assertTrue(parts[2].strip())
 
+    def test_no_retired_product_names_in_portable_skills(self):
+        old_label = re.compile(r"agent[-_ ]hub", re.IGNORECASE)
+        for path in sorted(SKILLS.rglob("*")):
+            if not path.is_file():
+                continue
+            with self.subTest(path=str(path.relative_to(ROOT))):
+                content = path.read_text(encoding="utf-8")
+                self.assertIsNone(old_label.search(content))
+                self.assertNotIn("an " + "Truthrail", content)
 
-    def test_portable_skills_use_current_product_name(self):
-        """Instruction and trigger text should not reintroduce the old product label."""
-        for path in sorted((ROOT / "skills").glob("*/SKILL.md")):
-            with self.subTest(skill=path.parent.name):
-                self.assertNotIn("Agent Hub", path.read_text(encoding="utf-8"))
+    def test_skill_safety_and_contract_references(self):
+        contents = {
+            p.parent.name: p.read_text(encoding="utf-8")
+            for p in SKILLS.glob("*/SKILL.md")
+        }
+        self.assertTrue((ROOT / "capabilities" / "contract.yaml").is_file())
+        self.assertIn("capabilities/contract.yaml", contents["activate-capability"])
+        self.assertIn("explicit authorization", contents["bootstrap-instance"])
+        self.assertIn("never grants permission", contents["capability-route"])
+        self.assertIn("explicit user authorization", contents["orchestrate-action"])
+        self.assertIn("executed != verified", contents["orchestrate-action"])
+        self.assertIn("live target-system evidence", contents["rebuild-context"])
+        self.assertIn("Do not infer inactivity", contents["recent-activity"])
 
 
 if __name__ == "__main__":

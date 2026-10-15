@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.5.0 — 2026-10-15
+
+- consolidate Python modules, JSON Schemas and the CLI under the Truthrail namespace; remove the transitional implementation and package aliases;
+- use a single canonical instance configuration and directory, and move example and demo identifiers to Truthrail;
+- audit all portable skills, their contract references, bundle declarations and security boundaries;
+- align installation, tests, CI and documentation; this is a breaking name/identifier migration for integrations pinned to older releases.
+
 ## 0.4.1 — 2026-10-09
 
 - use the canonical Truthrail name in portable skill descriptions and headings while preserving legacy technical identifiers, imports and GitHub routes;
@@ -20,10 +27,9 @@
 ## 0.3.0 — 2026-10-07
 
 - define explicit assistant / private-instance / Core / capability boundaries;
-- add the canonical Python namespace `truthrail_core`;
-- keep `agent_hub_core` as a compatibility namespace backed by the same implementation;
-- route the preferred `truthrail` CLI through the canonical namespace while preserving the legacy `agent-hub-core` command;
-- quarantine legacy Agent Hub naming to compatibility surfaces instead of creating new implementation paths;
+- introduced the canonical Python namespace `truthrail_core` with transitional aliases at the time;
+- introduced the preferred `truthrail` CLI alongside a temporary compatibility command;
+- limited historical technical identifiers to compatibility surfaces during migration;
 - keep protocol schema 0.2 and the `executed -> verifying -> verified` lifecycle unchanged.
 
 ## 0.2.0 — 2026-10-06
@@ -52,13 +58,13 @@
 - add optional `--fail-on-expansion` CI policy without making blocking the protocol default;
 
 - adopt **Truthrail** as the product name with the tagline `One source of truth. Any AI.`;
-- add the preferred `truthrail` CLI while retaining `agent-hub-core` for v0.1 compatibility;
+- introduced the preferred `truthrail` CLI with a transitional compatibility alias;
 - keep legacy Python package, on-disk paths, and schema identifiers stable during the rename;
 
 - add progressive capability readiness states: ready / degraded / dormant / blocked;
 - add machine-readable `capabilities/contract.yaml`;
 - add executable `capability_readiness` and `capability_activation_receipt` schemas;
-- separate optional capability activation from core Hub onboarding;
+- separate optional capability activation from core Core onboarding;
 - add portable activation skill, examples, semantic validation and tests;
 - add brownfield-first onboarding protocol with DISCOVER → CLASSIFY → BUILD → VALIDATE → WATCH → RECEIPT phases;
 - add machine-readable `onboarding/contract.yaml` and portable bootstrap skill;

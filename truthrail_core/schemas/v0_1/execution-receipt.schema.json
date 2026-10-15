@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:agent-hub-core:v0.1:execution-receipt",
-  "title": "Agent Hub ExecutionReceipt v0.1",
+  "$id": "urn:truthrail-core:v0.1:execution-receipt",
+  "title": "Truthrail ExecutionReceipt v0.1",
   "type": "object",
   "additionalProperties": false,
   "required": [

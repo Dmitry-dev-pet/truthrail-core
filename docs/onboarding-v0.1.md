@@ -113,7 +113,7 @@ Otherwise create one dedicated private Truthrail repository or user-approved equ
 A portable instance contains at least:
 
 ```text
-agent-hub.yaml
+truthrail.yaml
 projects.yaml
 capabilities.yaml
 credentials.yaml

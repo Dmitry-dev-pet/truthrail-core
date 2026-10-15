@@ -1,8 +1,270 @@
-"""Canonical Truthrail CLI module."""
+from __future__ import annotations
 
-from agent_hub_core.cli import *  # noqa: F401,F403
-from agent_hub_core.cli import main
+import argparse
+import json
+import sys
+from pathlib import Path
+from typing import Sequence
+
+from .admission import evaluate_operation_admission, format_operation_admission_markdown
+from .capability_diff import diff_control_planes, format_capability_diff_markdown
+from .capability_policy import evaluate_control_plane_policy, format_capability_policy_markdown
+from .conformance import run_scenario
+from .instance import (
+    InstanceValidationError,
+    bootstrap_acceptance,
+    doctor_instance,
+    init_instance,
+    validate_instance,
+)
+from .validation import (
+    ProtocolValidationError,
+    SCHEMA_FILES,
+    SCHEMA_FILES_BY_VERSION,
+    check_schemas,
+    validate_file,
+)
 
 
-if __name__ == "__main__":
-    raise SystemExit(main())
+def build_parser() -> argparse.ArgumentParser:
+    parser = argparse.ArgumentParser(
+        prog="truthrail",
+        description="Bootstrap, validate, and exercise Truthrail Core.",
+    )
+    sub = parser.add_subparsers(dest="command", required=True)
+
+    init = sub.add_parser(
+        "init",
+        help="Create a zero-custom-secret Truthrail instance.",
+    )
+    init.add_argument("path", nargs="?", type=Path, default=Path(".truthrail"))
+    init.add_argument("--owner", required=True)
+    init.add_argument(
+        "--project",
+        action="append",
+        default=[],
+        help="Public owner/repository to add; repeat for multiple projects.",
+    )
+    init.add_argument("--force", action="store_true")
+
+    validate_instance_cmd = sub.add_parser(
+        "validate-instance",
+        help="Validate a Truthrail instance directory.",
+    )
+    validate_instance_cmd.add_argument(
+        "path", nargs="?", type=Path, default=Path(".truthrail")
+    )
+
+    doctor = sub.add_parser(
+        "doctor",
+        help="Validate an instance and optionally check public GitHub reachability.",
+    )
+    doctor.add_argument(
+        "path", nargs="?", type=Path, default=Path(".truthrail")
+    )
+    doctor.add_argument(
+        "--offline",
+        action="store_true",
+        help="Skip network checks.",
+    )
+
+    validate = sub.add_parser(
+        "validate", help="Validate one protocol JSON document."
+    )
+    validate.add_argument("--kind", choices=sorted(SCHEMA_FILES), required=True)
+    validate.add_argument(
+        "--schema-version",
+        choices=sorted(SCHEMA_FILES_BY_VERSION),
+        default="0.1",
+        help="Protocol schema version; v0.1 remains the compatibility default.",
+    )
+    validate.add_argument("path", type=Path)
+
+    check_schemas_cmd = sub.add_parser(
+        "check-schemas", help="Validate bundled JSON Schemas."
+    )
+    check_schemas_cmd.add_argument(
+        "--schema-version",
+        choices=["all", *sorted(SCHEMA_FILES_BY_VERSION)],
+        default="all",
+    )
+    sub.add_parser(
+        "conformance", help="Run the deterministic v0.1 protocol scenario."
+    )
+    sub.add_parser(
+        "bootstrap-acceptance",
+        help="Prove a second instance starts with zero custom secrets.",
+    )
+    capability_diff = sub.add_parser(
+        "capability-diff",
+        help="Compare two reviewed control-plane contracts without executing them.",
+    )
+    capability_diff.add_argument("before", type=Path)
+    capability_diff.add_argument("after", type=Path)
+    capability_diff.add_argument(
+        "--format",
+        choices=("markdown", "json"),
+        default="markdown",
+    )
+    capability_diff.add_argument(
+        "--fail-on-expansion",
+        action="store_true",
+        help="Exit with status 2 when explicit authority expands.",
+    )
+
+    capability_policy = sub.add_parser(
+        "capability-policy",
+        help="Evaluate the default v1 policy for a reviewed control-plane change.",
+    )
+    capability_policy.add_argument("before", type=Path)
+    capability_policy.add_argument("after", type=Path)
+    capability_policy.add_argument(
+        "--format",
+        choices=("markdown", "json"),
+        default="markdown",
+    )
+    capability_policy.add_argument(
+        "--fail-on",
+        choices=("none", "block", "review"),
+        default="none",
+        help="Optional CI enforcement threshold.",
+    )
+
+    admission = sub.add_parser(
+        "admit-operation",
+        help="Evaluate runtime admission for one reviewed control-plane operation.",
+    )
+    admission.add_argument("contract", type=Path)
+    admission.add_argument("--operation", required=True)
+    admission.add_argument("--actor", required=True)
+    admission.add_argument("--owner", required=True)
+    admission.add_argument(
+        "--route",
+        choices=("agent", "operator"),
+        default="agent",
+    )
+    admission.add_argument(
+        "--format",
+        choices=("markdown", "json"),
+        default="markdown",
+    )
+    admission.add_argument(
+        "--require-admit",
+        action="store_true",
+        help="Exit non-zero unless the admission decision is ADMIT.",
+    )
+
+    sub.add_parser("list-kinds", help="List supported protocol document kinds.")
+    return parser
+
+
+def _print_json(payload: object) -> None:
+    print(json.dumps(payload, indent=2, sort_keys=True))
+
+
+def main(argv: Sequence[str] | None = None) -> int:
+    parser = build_parser()
+    args = parser.parse_args(argv)
+    try:
+        if args.command == "init":
+            _print_json(
+                init_instance(
+                    args.path,
+                    owner=args.owner,
+                    projects=args.project,
+                    force=args.force,
+                )
+            )
+            return 0
+        if args.command == "validate-instance":
+            _print_json(validate_instance(args.path))
+            return 0
+        if args.command == "doctor":
+            result = doctor_instance(args.path, network=not args.offline)
+            _print_json(result)
+            return 0 if result["ok"] else 1
+        if args.command == "validate":
+            validate_file(
+                args.kind,
+                args.path,
+                schema_version=args.schema_version,
+            )
+            print(
+                f"OK: {args.kind} schema={args.schema_version} {args.path}"
+            )
+            return 0
+        if args.command == "check-schemas":
+            version = None if args.schema_version == "all" else args.schema_version
+            check_schemas(version)
+            label = "all" if version is None else version
+            print(f"OK: schema_version={label}")
+            return 0
+        if args.command == "conformance":
+            _print_json(run_scenario())
+            return 0
+        if args.command == "bootstrap-acceptance":
+            _print_json(bootstrap_acceptance())
+            return 0
+        if args.command == "capability-diff":
+            before = json.loads(args.before.read_text(encoding="utf-8"))
+            after = json.loads(args.after.read_text(encoding="utf-8"))
+            if not isinstance(before, dict) or not isinstance(after, dict):
+                raise ProtocolValidationError(
+                    "capability-diff inputs must both be JSON objects"
+                )
+            report = diff_control_planes(before, after)
+            if args.format == "json":
+                _print_json(report)
+            else:
+                print(format_capability_diff_markdown(report))
+            if args.fail_on_expansion and report["summary"]["expansions"]:
+                return 2
+            return 0
+        if args.command == "capability-policy":
+            before = json.loads(args.before.read_text(encoding="utf-8"))
+            after = json.loads(args.after.read_text(encoding="utf-8"))
+            if not isinstance(before, dict) or not isinstance(after, dict):
+                raise ProtocolValidationError(
+                    "capability-policy inputs must both be JSON objects"
+                )
+            decision = evaluate_control_plane_policy(before, after)
+            if args.format == "json":
+                _print_json(decision)
+            else:
+                print(format_capability_policy_markdown(decision))
+            if args.fail_on == "block" and decision["decision"] == "BLOCK":
+                return 2
+            if args.fail_on == "review" and decision["decision"] in {"REVIEW", "BLOCK"}:
+                return 3
+            return 0
+        if args.command == "admit-operation":
+            contract = json.loads(args.contract.read_text(encoding="utf-8"))
+            if not isinstance(contract, dict):
+                raise ProtocolValidationError(
+                    "admit-operation contract must be a JSON object"
+                )
+            decision = evaluate_operation_admission(
+                contract,
+                args.operation,
+                actor=args.actor,
+                owner=args.owner,
+                route=args.route,
+            )
+            if args.format == "json":
+                _print_json(decision)
+            else:
+                print(format_operation_admission_markdown(decision))
+            if args.require_admit:
+                if decision["decision"] == "DENY":
+                    return 2
+                if decision["decision"] == "REQUIRE_HUMAN":
+                    return 3
+            return 0
+        if args.command == "list-kinds":
+            for kind in sorted(SCHEMA_FILES):
+                print(kind)
+            return 0
+    except (InstanceValidationError, ProtocolValidationError, json.JSONDecodeError) as exc:
+        print(f"ERROR: {exc}", file=sys.stderr)
+        return 1
+    raise AssertionError(args.command)

@@ -30,7 +30,7 @@
       "trigger_prefix": "[credential-export] ",
       "syntax": "[credential-export] <name>",
       "legacy_operator_only": true,
-      "reason": "Operator-only operation; credential export is outside Agent Hub routing."
+      "reason": "Operator-only operation; credential export is outside Truthrail routing."
     }
   }
 }

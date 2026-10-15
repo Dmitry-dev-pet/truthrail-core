@@ -40,11 +40,11 @@
   "authoritative_refs": [
     {
       "type": "workflow_run",
-      "value": "example-org/agent-hub/actions/runs/456"
+      "value": "example-org/truthrail/actions/runs/456"
     },
     {
       "type": "artifact",
-      "value": "agent-hub-inventory-discovery"
+      "value": "truthrail-inventory-discovery"
     }
   ]
 }

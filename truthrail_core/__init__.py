@@ -1,13 +1,27 @@
-"""Canonical Python namespace for Truthrail Core.
+"""Portable, canonical Python implementation of Truthrail Core."""
 
-The implementation remains in :mod:`agent_hub_core` during the compatibility
-window. New code should import :mod:`truthrail_core`; the legacy namespace is
-kept working for existing consumers.
-"""
+__version__ = "0.5.0"
 
-from agent_hub_core import *  # noqa: F401,F403
-from agent_hub_core import __all__ as _legacy_all
-from agent_hub_core import __version__
+from .admission import evaluate_operation_admission, format_operation_admission_markdown
+from .capability_diff import diff_control_planes, format_capability_diff_markdown
+from .capability_policy import evaluate_capability_policy, evaluate_control_plane_policy, format_capability_policy_markdown
+from .conformance import run_scenario
+from .instance import (
+    InstanceValidationError,
+    bootstrap_acceptance,
+    doctor_instance,
+    init_instance,
+    validate_instance,
+)
+from .reference import ReferenceAdapter, RoutingError
+from .validation import (
+    ProtocolValidationError,
+    check_schemas,
+    validate_document,
+    validate_file,
+    validate_run_bundle,
+)
+
 from .execution_binding import (
     ExecutionBindingError,
     StaleExecutionResultError,
@@ -23,9 +37,38 @@ from .execution_binding import (
     render_pr_summary,
 )
 
-__all__ = list(_legacy_all) + [
-    "ExecutionBindingError", "StaleExecutionResultError", "assert_plan_current",
-    "assert_receipt_fresh", "assert_receipt_matches_plan", "authorize_repository_route",
-    "bind_execution_plan", "bind_execution_receipt", "bind_verification_result",
-    "canonical_digest", "compute_state_fingerprint", "render_pr_summary",
+__all__ = [
+    "__version__",
+    "InstanceValidationError",
+    "ProtocolValidationError",
+    "ReferenceAdapter",
+    "RoutingError",
+    "bootstrap_acceptance",
+    "check_schemas",
+    "diff_control_planes",
+    "doctor_instance",
+    "evaluate_operation_admission",
+    "evaluate_capability_policy",
+    "evaluate_control_plane_policy",
+    "format_capability_policy_markdown",
+    "format_capability_diff_markdown",
+    "format_operation_admission_markdown",
+    "init_instance",
+    "run_scenario",
+    "validate_document",
+    "validate_file",
+    "validate_run_bundle",
+    "validate_instance",
+    "ExecutionBindingError",
+    "StaleExecutionResultError",
+    "assert_plan_current",
+    "assert_receipt_fresh",
+    "assert_receipt_matches_plan",
+    "authorize_repository_route",
+    "bind_execution_plan",
+    "bind_execution_receipt",
+    "bind_verification_result",
+    "canonical_digest",
+    "compute_state_fingerprint",
+    "render_pr_summary",
 ]

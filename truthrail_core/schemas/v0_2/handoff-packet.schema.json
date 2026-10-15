@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "urn:agent-hub-core:v0.2:handoff-packet",
+  "$id": "urn:truthrail-core:v0.2:handoff-packet",
   "title": "Truthrail HandoffPacket v0.2",
   "type": "object",
   "additionalProperties": false,

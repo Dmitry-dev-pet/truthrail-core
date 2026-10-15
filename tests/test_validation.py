@@ -4,7 +4,7 @@ from pathlib import Path
 
 import yaml
 
-from agent_hub_core.validation import (
+from truthrail_core.validation import (
     ProtocolValidationError,
     check_schemas,
     validate_document,

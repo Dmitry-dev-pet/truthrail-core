@@ -41,6 +41,10 @@ mandatory.
 Completeness means complete within the user-approved GitHub scope. Never claim that
 unseen repositories do not exist.
 
+Creating or updating the user's private instance requires explicit authorization
+for that repository and operation. A connected GitHub account is not a blanket
+grant to write; do not create a repository merely from a public Core link.
+
 ## First: choose the mode from live GitHub
 
 Enumerate the complete visible repository set before deciding the mode.

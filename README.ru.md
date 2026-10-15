@@ -212,11 +212,10 @@ Truthrail — это не:
 - [Run ledger v0.2](docs/run-ledger-v0.2.md)
 - [Truthrail Watch semantics v0.2](docs/watch-v0.2.md)
 - [Named assistant skills v0.2](docs/assistant-skills-v0.2.md)
+- [Аудит навыков v0.5](docs/skill-audit-v0.5.md)
 - [Security](SECURITY.md)
 - [Bootstrap skill](skills/bootstrap-instance/SKILL.md)
 
-> Ранее проект назывался **Agent Hub Core**. Старые v0.1 идентификаторы
-> `agent-hub-core`, `agent_hub_core` и `.agent-hub/` пока поддерживаются для совместимости.
 
 ## Лицензия
 

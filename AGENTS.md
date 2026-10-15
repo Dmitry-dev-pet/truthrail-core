@@ -25,8 +25,8 @@ If a user shared this repository with an AI assistant to understand or adopt Tru
 - Private Truthrail instances own user-specific durable state and routing overlays; they must not grow a second implementation of the portable protocol.
 - Truthrail Core owns protocol schemas, semantic validation, portable skills and routing mechanism.
 - Capabilities/control planes own concrete operation contracts and verification evidence.
-- New code uses the canonical `truthrail_core` namespace. `agent_hub_core` is a compatibility namespace backed by the same implementation.
-- Compatibility aliases point to canonical behavior; do not fork logic between old and new names.
+- The only Python implementation namespace is `truthrail_core`; portable skills resolve by stable skill ID.
+- Do not duplicate portable logic inside instance repositories or plugin adapters.
 
 See [docs/boundaries-v0.3.md](docs/boundaries-v0.3.md).
 
@@ -41,9 +41,9 @@ See [docs/boundaries-v0.3.md](docs/boundaries-v0.3.md).
 - Keep handoff packets bounded; do not forward complete chat histories.
 - Do not introduce a generic privileged shell or universal executor.
 
-## Compatibility
+## Versioning and migration
 
-v0.1 schema changes must remain backward compatible unless the package version and
-protocol version are intentionally advanced together. During the Truthrail rename, keep
-legacy technical identifiers such as `agent-hub-core`, `agent_hub_core`, `.agent-hub/`,
-and existing schema IDs working unless a separately versioned migration removes them.
+Version 0.5.0 retires historical package, CLI, configuration and schema-URN aliases.
+Existing integrations pinned to earlier versions require an explicit migration before
+updating their dependency. Document any breaking protocol identifier change and verify
+all schemas, examples, skills, tests and downstream consumers together.
